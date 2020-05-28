@@ -11,6 +11,7 @@ import model.bean.Campeonato;
 import model.bean.Time;
 import model.bean.Jogador;
 import model.bean.Partida;
+import model.bean.Resultados;
 import model.dao.CAmareloDAO;
 import model.dao.CVermelhoDAO;
 import model.dao.CampeonatoDAO;
@@ -18,6 +19,7 @@ import model.dao.GolsDAO;
 import model.dao.TimeDAO;
 import model.dao.JogadorDAO;
 import model.dao.PartidaDAO;
+import model.dao.ResultadosDAO;
 
 public class TelaCadastrarPartida extends javax.swing.JFrame {
 
@@ -33,7 +35,7 @@ public class TelaCadastrarPartida extends javax.swing.JFrame {
 
     public TelaCadastrarPartida(Campeonato camp, Partida partida) {
         initComponents();
-        
+
         this.bordaEstadio = txtEstadio.getBorder();
         this.bordaDia = cmbDia.getBorder();
         this.bordaMes = cmbMes.getBorder();
@@ -57,7 +59,7 @@ public class TelaCadastrarPartida extends javax.swing.JFrame {
         txtGols2.setText("0");
         txtPenalti1.setText("0");
         txtPenalti2.setText("0");
-        
+
         lblMandante.setText(partida.getMandante().getNome());
         lblVisitante.setText(partida.getVisitante().getNome());
         DefaultTableModel tbm1 = (DefaultTableModel) tbTime1.getModel();
@@ -334,7 +336,7 @@ public class TelaCadastrarPartida extends javax.swing.JFrame {
         for (Jogador jogador : jogadores2) {
             jogadorDAO.cumpriuSuspensao(jogador, camp);
         }
-        
+
         partida.setPlacarMandante(Integer.valueOf(txtGols1.getText()));
         partida.setPlacarVisitante(Integer.valueOf(txtGols2.getText()));
         partida.setLocal(txtEstadio.getText());
@@ -482,7 +484,7 @@ public class TelaCadastrarPartida extends javax.swing.JFrame {
             jogador.setApelido((String) model1.getValueAt(i, 0));
             Jogador jogA = jogadorDAO.buscarPorNome(jogador);
             jogador.setGols(Integer.valueOf(String.valueOf(model1.getValueAt(i, 1))));
-            for(int j = 0;j<jogador.getGols();j++){
+            for (int j = 0; j < jogador.getGols(); j++) {
                 golDAO.inserir(jogA, partida);
             }
             jogador.setCa(Integer.valueOf(String.valueOf(model1.getValueAt(i, 2))));
@@ -504,35 +506,38 @@ public class TelaCadastrarPartida extends javax.swing.JFrame {
         }
 
         camp = campDAO.buscar(camp.getId()); // atualiza o campeonato
-        if(camp.isOitavas()){
+        if (camp.isOitavas()) {
             TelaOitavas t = new TelaOitavas(camp);
             t.setVisible(true);
-        }else if(camp.isQuartas()){
+        } else if (camp.isQuartas()) {
             TelaQuartas t = new TelaQuartas(camp);
             t.setVisible(true);
-        }else if(camp.isSemi()){
+        } else if (camp.isSemi()) {
             TelaSemi t = new TelaSemi(camp);
             t.setVisible(true);
-        }else if(camp.isFinal()){
+        } else if (camp.isFinal()) {
             TelaFinal t = new TelaFinal(camp);
             t.setVisible(true);
         }
         dispose();
     }
 
-    
+
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-         // número de times ainda no campeonato
+        // número de times ainda no campeonato
         if (lblPenalti.isVisible() == true) { // se tiver ido pros penaltis
 
             if (Integer.valueOf(txtPenalti1.getText()) > Integer.valueOf(txtPenalti2.getText())) {
                 // se o valor nos penaltis do mandante for maior que o do visitante
                 if (camp.isFinal()) { // se tiver só dois times
-                    campDAO.campeao(camp, mandante); //mandante é campeão
-                    campDAO.viceCampeao(camp, visitante); // visitante vice
-                     // esse comando é questão de organização
-                    camp.setArtilheiro(jogadorDAO.artilheiro(camp));
-                    campDAO.artilheiro(camp, camp.getArtilheiro());
+                    ResultadosDAO resDAO = new ResultadosDAO();
+                    Resultados res = new Resultados();
+                    res.setCampeonato(camp);
+                    res.setCampeao(mandante);
+                    res.setViceCampeao(visitante);
+                    res.setArtilheiro(jogadorDAO.artilheiro(camp));
+                   resDAO.inserir(res);
+// esse comando é questão de organização
                     campDAO.finalizar(camp);
                     cadastroMataMata(); // puxa todo o método
                 } else { // se tiver mais de 2 times
@@ -542,11 +547,13 @@ public class TelaCadastrarPartida extends javax.swing.JFrame {
             } else if (Integer.valueOf(txtPenalti1.getText()) < Integer.valueOf(txtPenalti2.getText())) {
                 // se o visitante tiver ganhado
                 if (camp.isFinal()) {
-                    campDAO.campeao(camp, visitante);
-                    campDAO.viceCampeao(camp, mandante);
-                    
-                    camp.setArtilheiro(jogadorDAO.artilheiro(camp));
-                    campDAO.artilheiro(camp, camp.getArtilheiro());
+                    Resultados res = new Resultados();
+                    ResultadosDAO resDAO = new ResultadosDAO();
+                    res.setCampeao(visitante);
+                    res.setViceCampeao(mandante);
+                    res.setArtilheiro(jogadorDAO.artilheiro(camp));
+                    res.setCampeonato(camp);
+                    resDAO.inserir(res);
                     campDAO.finalizar(camp);
                     cadastroMataMata();
                 } else {
@@ -591,11 +598,13 @@ public class TelaCadastrarPartida extends javax.swing.JFrame {
                             cadastro();
                         } else { //se não tiver na fase de grupos
                             if (camp.isFinal()) {//se for a final
-                                campDAO.campeao(camp, mandante);
-                                campDAO.viceCampeao(camp, visitante);
-                                
-                                camp.setArtilheiro(jogadorDAO.artilheiro(camp));
-                                campDAO.artilheiro(camp, camp.getArtilheiro());
+                                Resultados res = new Resultados();
+                                ResultadosDAO resDAO = new ResultadosDAO();
+                                res.setCampeao(mandante);
+                                res.setViceCampeao(visitante);
+                                res.setArtilheiro(jogadorDAO.artilheiro(camp));
+                                res.setCampeonato(camp);
+                                resDAO.inserir(res);
                                 campDAO.finalizar(camp);
                                 cadastroMataMata();
                             } else { // se não for
@@ -611,11 +620,13 @@ public class TelaCadastrarPartida extends javax.swing.JFrame {
                             cadastro();
                         } else {
                             if (camp.isFinal()) {
-                                campDAO.campeao(camp, visitante);
-                                campDAO.viceCampeao(camp, mandante);
-                                
-                                camp.setArtilheiro(jogadorDAO.artilheiro(camp));
-                                campDAO.artilheiro(camp, camp.getArtilheiro());
+                                Resultados res = new Resultados();
+                                ResultadosDAO resDAO = new ResultadosDAO();
+                                res.setCampeao(visitante);
+                                res.setViceCampeao(mandante);
+                                res.setArtilheiro(jogadorDAO.artilheiro(camp));
+                                res.setCampeonato(camp);
+                                resDAO.inserir(res);
                                 campDAO.finalizar(camp);
                                 cadastroMataMata();
                             } else {

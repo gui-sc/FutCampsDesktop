@@ -17,12 +17,12 @@ public class PartidaDAO {
         Connection conn = null;
         try {
             conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO partida (mandante, visitante,campeonato,fase) "
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO partida (mandante, visitante,fase,campeonato) "
                     + "VALUES (?,?,?,?)");
             pstmt.setInt(1, partida.getMandante().getId());
             pstmt.setInt(2, partida.getVisitante().getId());
-            pstmt.setInt(3, partida.getCampeonato().getId());
-            pstmt.setString(4, partida.getFase());
+            pstmt.setString(3, partida.getFase());
+            pstmt.setInt(4, partida.getCampeonato().getId());
             
             pstmt.execute();
 

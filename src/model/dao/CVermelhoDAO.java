@@ -25,11 +25,12 @@ public class CVermelhoDAO {
         Connection conn;
         try{
             conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO c_vermelho (jogador,partida,time)"
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO vermelho (jogador,time,partida)"
                     + " VALUES (?,?,?)");
-            pstmt.setInt(1, jogador.getDocumento());
-            pstmt.setInt(2, partida.getId());
-            pstmt.setInt(3, jogador.getTime().getId());
+            pstmt.setInt(1, jogador.getId());
+            pstmt.setInt(2, jogador.getTime().getId());
+            pstmt.setInt(3, partida.getId());
+            
             pstmt.execute();
         }catch(SQLException ex){
             

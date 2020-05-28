@@ -36,7 +36,7 @@ public class TelaEditarCamp extends javax.swing.JFrame {
         bordaNormal = txtNome.getBorder();
         this.camp = camp;
         txtNome.setText(camp.getNome());
-        txtCidade.setText(camp.getLocal());
+        txtCidade.setText(camp.getCidade());
         txtPremiacao.setText(camp.getPremiacao());
         TimeDAO timeDAO = new TimeDAO();
         DefaultListModel model = (DefaultListModel) lstTimes.getModel();
@@ -211,7 +211,7 @@ public class TelaEditarCamp extends javax.swing.JFrame {
             CampeonatoDAO campDAO = new CampeonatoDAO();
 
             camp.setNome(txtNome.getText());
-            camp.setLocal(txtCidade.getText());
+            camp.setCidade(txtCidade.getText());
             camp.setPremiacao(txtPremiacao.getText());
             campDAO.alterar(camp); // troca os dados antigos pelos novos
             TelaCarregarCamp telaCarregarCamp = new TelaCarregarCamp();

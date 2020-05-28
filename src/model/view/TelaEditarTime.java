@@ -6,7 +6,13 @@
 package model.view;
 
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
@@ -44,9 +50,10 @@ public class TelaEditarTime extends javax.swing.JFrame {
         JogadorDAO jogadorDAO = new JogadorDAO();
         List<Jogador> jogadores = jogadorDAO.listarPorTime(time); //lista os jogadores que fazem parte desse time
         for (Jogador jogador : jogadores) {
+             DateFormat normal = new SimpleDateFormat("dd-MM-yyyy");
             tbm.addRow(
                     new Object[]{
-                        jogador.getDocumento(),
+                        normal.format(jogador.getDataNasc()),
                         jogador.getNome(),
                         jogador.getApelido()
                     }
@@ -262,8 +269,8 @@ String acao;
         } else {
             JogadorDAO jogadorDAO = new JogadorDAO();
             Object documento = tbJogadores.getValueAt(tbJogadores.getSelectedRow(), 0);
-            
-            Jogador jogador = jogadorDAO.buscar((int)documento);
+
+            Jogador jogador = jogadorDAO.buscar((int) documento);
             acao = "alterar"; //fala pra outra tela o que é pra fazer
             TelaAlteraJogador taj = new TelaAlteraJogador(camp, time, jogador, acao);
             taj.setVisible(true);

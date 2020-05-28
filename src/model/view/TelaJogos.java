@@ -54,7 +54,7 @@ public class TelaJogos extends javax.swing.JFrame {
             }
         }
         TimeDAO timeDAO = new TimeDAO();
-        if (todasCadastradas == true) {
+        if (todasCadastradas == true && camp.isFinalizado()) {
 
             if (camp.isFaseDeGrupos()) {
                 if (camp.getNumGrupos() == 4) {

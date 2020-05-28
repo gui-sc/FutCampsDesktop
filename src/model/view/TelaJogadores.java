@@ -6,6 +6,12 @@
 package model.view;
 
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
@@ -96,7 +102,7 @@ public class TelaJogadores extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("N° Documento:");
+        jLabel3.setText("Data Nasc. :");
         getContentPane().add(jLabel3);
         jLabel3.setBounds(100, 280, 110, 20);
 
@@ -115,7 +121,7 @@ public class TelaJogadores extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEncerrar);
-        btnEncerrar.setBounds(340, 420, 83, 23);
+        btnEncerrar.setBounds(340, 420, 80, 31);
 
         btnCadastrar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         btnCadastrar.setText("Cadastrar");
@@ -126,7 +132,7 @@ public class TelaJogadores extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnCadastrar);
-        btnCadastrar.setBounds(60, 420, 110, 23);
+        btnCadastrar.setBounds(60, 420, 110, 31);
 
         lblTime.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lblTime.setForeground(new java.awt.Color(255, 255, 255));
@@ -177,7 +183,14 @@ public class TelaJogadores extends javax.swing.JFrame {
             Jogador jogador = new Jogador();
             jogador.setNome(txtNome.getText());
             jogador.setApelido(txtApelido.getText());
-            jogador.setDocumento(Integer.valueOf(txtDocumento.getText()));
+            DateFormat sql = new SimpleDateFormat("yyyy-MM-dd");
+            Date data = null;
+            try {
+                data = sql.parse(txtDocumento.getText());
+            } catch (ParseException ex) {
+                Logger.getLogger(TelaSumula.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            jogador.setDataNasc((java.sql.Date) data);
             jogador.setTime(time); // pega o time que foi passado lá em cima
             JogadorDAO jogadorDAO = new JogadorDAO();
             jogadorDAO.inserir(jogador);

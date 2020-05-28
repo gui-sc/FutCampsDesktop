@@ -18,17 +18,16 @@ public class JogadorDAO {
         Connection conn = null;
         try {
             conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO jogador (documento, nome, time, apelido, gols, ca, cv, suspenso) "
-                    + "VALUES (?,?,?,?, default, default, default, default)");
-            pstmt.setInt(1, jogador.getDocumento());
-            pstmt.setString(2, jogador.getNome());
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO jogador (nome,  apelido,time, gols, ca, suspenso,dataNasc,pendurado) "
+                    + "VALUES (?,?,?, default, default, default,?,default)");
+            pstmt.setString(1, jogador.getNome());
+            pstmt.setString(2, jogador.getApelido());
             pstmt.setInt(3, jogador.getTime().getId());
-            pstmt.setString(4, jogador.getApelido());
+            pstmt.setDate(4, jogador.getDataNasc());
 
             pstmt.execute();
             JOptionPane.showMessageDialog(null, "Jogador cadastrado com sucesso");
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Nº de documento já cadastrado");
             ex.printStackTrace();
         }
     }
@@ -37,7 +36,7 @@ public class JogadorDAO {
         Connection conn = null;
         try {
             conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("DELETE FROM jogador " + "WHERE documento = ?");
+            PreparedStatement pstmt = conn.prepareStatement("DELETE FROM jogador " + "WHERE id = ?");
             pstmt.setInt(1, documento);
             pstmt.execute();
             JOptionPane.showMessageDialog(null, "Jogador excluído com sucesso");
@@ -51,10 +50,10 @@ public class JogadorDAO {
         try {
             conn = new ConnectionFactory().getConnection();
             PreparedStatement pstmt = conn.prepareStatement("UPDATE jogador set nome=?,apelido=?"
-                    + " WHERE documento = ?");
+                    + " WHERE id = ?");
             pstmt.setString(1, jogador.getNome());
             pstmt.setString(2, jogador.getApelido());
-            pstmt.setInt(3, jogador.getDocumento());
+            pstmt.setInt(3, jogador.getId());
             pstmt.executeUpdate();
             JOptionPane.showMessageDialog(null,"Jogador alterado com sucesso!");
         } catch (SQLException ex) {
@@ -66,15 +65,16 @@ public class JogadorDAO {
         Connection conn = null;
         try {
             conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM jogador " + "WHERE documento = ?");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM jogador " + "WHERE id = ?");
             pstmt.setInt(1, documento);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 Jogador selJogador = new Jogador();
+                selJogador.setId(rs.getInt("id"));
                 selJogador.setNome(rs.getString("nome"));
                 selJogador.setApelido(rs.getString("apelido"));
                 selJogador.setGols(rs.getInt("gols"));
-                selJogador.setDocumento(rs.getInt("documento"));
+                selJogador.setId(rs.getInt("id"));
                 selJogador.setCa(rs.getInt("ca"));
                 selJogador.setCv(rs.getInt("cv"));
                 return selJogador;
@@ -99,7 +99,7 @@ public class JogadorDAO {
                 selJogador.setTime(timeDAO.buscar(rs.getInt("time")));
                 selJogador.setNome(rs.getString("nome"));
                 selJogador.setApelido(rs.getString("apelido"));
-                selJogador.setDocumento(rs.getInt("documento"));
+                selJogador.setId(rs.getInt("id"));
                 selJogador.setCa(rs.getInt("ca"));
                 selJogador.setCv(rs.getInt("cv"));
                 return selJogador;
@@ -207,7 +207,7 @@ public class JogadorDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Jogador jogador = new Jogador();
-                jogador.setDocumento(rs.getInt("documento"));
+                jogador.setId(rs.getInt("id"));
                 jogador.setNome(rs.getString("nome"));
                 jogador.setApelido(rs.getString("apelido"));
                 jogadores.add(jogador);
@@ -229,7 +229,7 @@ public class JogadorDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Jogador jogador = new Jogador();
-                jogador.setDocumento(rs.getInt("documento"));
+                jogador.setId(rs.getInt("id"));
                 jogador.setNome(rs.getString("nome"));
                 jogador.setApelido(rs.getString("apelido"));
                 jogador.setSuspenso(rs.getBoolean("suspenso"));
@@ -279,7 +279,7 @@ public class JogadorDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Jogador jogador = new Jogador();
-                jogador.setDocumento(rs.getInt("documento"));
+                jogador.setId(rs.getInt("id"));
                 jogador.setNome(rs.getString("nome"));
                 jogador.setApelido(rs.getString("apelido"));
                 jogador.setSuspenso(rs.getBoolean("suspenso"));

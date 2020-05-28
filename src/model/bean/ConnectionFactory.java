@@ -14,7 +14,7 @@ public class ConnectionFactory {
     public static Connection getConnection() {
         try {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3300/tccGuilhermeGustavo", "root", "bernardo11");
+            return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/futcamps", "root", "");
         } catch (SQLException ex) {
             return null;
         }

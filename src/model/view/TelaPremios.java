@@ -8,7 +8,9 @@ package model.view;
 
 import model.bean.Campeonato;
 import model.bean.Jogador;
+import model.bean.Resultados;
 import model.bean.Time;
+import model.dao.ResultadosDAO;
 
 
 /**
@@ -23,9 +25,10 @@ Campeonato camp;
     public TelaPremios(Campeonato camp) {
         initComponents();
         this.camp=camp;
-        Time campeao = camp.getCampeao();
-        Time vice = camp.getViceCampeao();
-        Jogador artilheiro = camp.getArtilheiro();
+        Resultados res = new ResultadosDAO().buscar(camp);
+        Time campeao = res.getCampeao();
+        Time vice = res.getViceCampeao();
+        Jogador artilheiro = res.getArtilheiro();
         lblArtilheiro.setText(artilheiro.getApelido());
         lblGols.setText(String.valueOf(artilheiro.getGols()));
         lblCampeao.setText(campeao.getNome());  // coloca o nome do campeão

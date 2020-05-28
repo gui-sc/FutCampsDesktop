@@ -1,12 +1,13 @@
-
 package model.bean;
 
 public class Campeonato {
+
     private int id;
-    private String regras;
+    private String formato;
     private String nome;
-    private String local;
+    private String cidade;
     private int ano;
+    private int classificados;
     private String premiacao;
     private int numTimes;
     private int numGrupos;
@@ -15,13 +16,56 @@ public class Campeonato {
     private boolean quartas;
     private boolean semi;
     private boolean Final;
-    private Time campeao;
-    private Time viceCampeao;
     private int cabecasDeChave;
     private boolean iniciado;
     private boolean finalizado;
-    private Jogador artilheiro;
+    private boolean zerarCartoesOitavas;
+    private boolean zerarCartoesQuartas;
+    private boolean zerarCartoesSemi;
+    private int cartoesPendurado;
 
+    public int getClassificados() {
+        return classificados;
+    }
+
+    public void setClassificados(int classificados) {
+        this.classificados = classificados;
+    }
+
+    public boolean isZerarCartoesOitavas() {
+        return zerarCartoesOitavas;
+    }
+
+    public void setZerarCartoesOitavas(boolean zerarCartoesOitavas) {
+        this.zerarCartoesOitavas = zerarCartoesOitavas;
+    }
+
+    public boolean isZerarCartoesQuartas() {
+        return zerarCartoesQuartas;
+    }
+
+    public void setZerarCartoesQuartas(boolean zerarCartoesQuartas) {
+        this.zerarCartoesQuartas = zerarCartoesQuartas;
+    }
+
+    public boolean isZerarCartoesSemi() {
+        return zerarCartoesSemi;
+    }
+
+    public void setZerarCartoesSemi(boolean zerarCartoesSemi) {
+        this.zerarCartoesSemi = zerarCartoesSemi;
+    }
+
+    public int getCartoesPendurado() {
+        return cartoesPendurado;
+    }
+
+    public void setCartoesPendurado(int cartoesPendurado) {
+        this.cartoesPendurado = cartoesPendurado;
+    }
+
+    
+    
     public boolean isOitavas() {
         return oitavas;
     }
@@ -54,8 +98,6 @@ public class Campeonato {
         this.Final = Final;
     }
 
-    
-    
     public boolean isFinalizado() {
         return finalizado;
     }
@@ -64,16 +106,6 @@ public class Campeonato {
         this.finalizado = finalizado;
     }
 
-    public Jogador getArtilheiro() {
-        return artilheiro;
-    }
-
-    public void setArtilheiro(Jogador artilheiro) {
-        this.artilheiro = artilheiro;
-    }
-    
-    
-    
     public boolean isIniciado() {
         return iniciado;
     }
@@ -89,14 +121,14 @@ public class Campeonato {
     public void setCabecasDeChave(int cabecasDeChave) {
         this.cabecasDeChave = cabecasDeChave;
     }
-    
+
     public Campeonato() {
     }
 
     public Campeonato(String regras, String nome, String local, String premiacao, int ano, int numTimes, int numGrupos, boolean faseDeGrupos) {
-        this.regras = regras;
+        this.formato = regras;
         this.nome = nome;
-        this.local = local;
+        this.cidade = local;
         this.premiacao = premiacao;
         this.ano = ano;
         this.numTimes = numTimes;
@@ -104,24 +136,6 @@ public class Campeonato {
         this.faseDeGrupos = faseDeGrupos;
     }
 
-    public Time getCampeao() {
-        return campeao;
-    }
-
-    public void setCampeao(Time campeao) {
-        this.campeao = campeao;
-    }
-
-    public Time getViceCampeao() {
-        return viceCampeao;
-    }
-
-    public void setViceCampeao(Time viceCampeao) {
-        this.viceCampeao = viceCampeao;
-    }
-
-    
-    
     public boolean isFaseDeGrupos() {
         return faseDeGrupos;
     }
@@ -138,8 +152,6 @@ public class Campeonato {
         this.numGrupos = numGrupos;
     }
 
-
-
     public int getNumTimes() {
         return numTimes;
     }
@@ -148,12 +160,12 @@ public class Campeonato {
         this.numTimes = numTimes;
     }
 
-    public String getRegras() {
-        return regras;
+    public String getFormato() {
+        return formato;
     }
 
-    public void setRegras(String regras) {
-        this.regras = regras;
+    public void setFormato(String regras) {
+        this.formato = regras;
     }
 
     public String getNome() {
@@ -172,12 +184,12 @@ public class Campeonato {
         this.id = id;
     }
 
-    public String getLocal() {
-        return local;
+    public String getCidade() {
+        return cidade;
     }
 
-    public void setLocal(String cidade) {
-        this.local = cidade;
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
     }
 
     public String getPremiacao() {
@@ -198,7 +210,7 @@ public class Campeonato {
 
     @Override
     public String toString() {
-        return nome +" "+ ano;
+        return nome + " " + ano;
     }
-    
+
 }

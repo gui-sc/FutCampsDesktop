@@ -26,11 +26,11 @@ public class GolsDAO {
         Connection conn;
         try {
             conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO gols(jogador,partida,time)"
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO gol(jogador,time,partida)"
                     + " VALUES (?,?,?)");
-            pstmt.setInt(1, jogador.getDocumento());
-            pstmt.setInt(2, partida.getId());
-            pstmt.setInt(3, jogador.getTime().getId());
+            pstmt.setInt(1, jogador.getId());
+            pstmt.setInt(2, jogador.getTime().getId());
+            pstmt.setInt(3, partida.getId());
             pstmt.execute();
         } catch (SQLException ex) {
 
@@ -44,7 +44,7 @@ public class GolsDAO {
         TimeDAO timeDAO = new TimeDAO();
         try{
             conn=new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("SELECT distinct * FROM gols"
+            PreparedStatement pstmt = conn.prepareStatement("SELECT distinct * FROM gol"
                     + " WHERE partida = ?");
             pstmt.setInt(1,partida.getId());
             ResultSet rs = pstmt.executeQuery();

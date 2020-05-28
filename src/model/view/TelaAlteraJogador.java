@@ -5,8 +5,13 @@
  */
 package model.view;
 
-
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
@@ -26,6 +31,7 @@ public class TelaAlteraJogador extends javax.swing.JFrame {
     Jogador jogador;
     String acao;
     Border borda;
+
     /**
      * Creates new form TelaAlteraJogador
      */
@@ -46,7 +52,8 @@ public class TelaAlteraJogador extends javax.swing.JFrame {
             this.setTitle("Altera Jogador");
             txtNome.setText(jogador.getNome());
             txtApelido.setText(jogador.getApelido());
-            txtDocumento.setText(String.valueOf(jogador.getDocumento()));
+            DateFormat normal = new SimpleDateFormat("dd-MM-yyyy");
+            txtDocumento.setText(normal.format(jogador.getDataNasc()));
             txtDocumento.setEnabled(false); // não pode alterar o número do documento do cara
         }
     }
@@ -104,7 +111,7 @@ public class TelaAlteraJogador extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("N° Documento:");
+        jLabel3.setText("Data de Nasc. :");
         getContentPane().add(jLabel3);
         jLabel3.setBounds(100, 150, 110, 20);
 
@@ -124,7 +131,7 @@ public class TelaAlteraJogador extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar);
-        btnSalvar.setBounds(60, 420, 80, 23);
+        btnSalvar.setBounds(60, 420, 80, 31);
 
         btnVoltar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         btnVoltar.setText("Voltar");
@@ -135,7 +142,7 @@ public class TelaAlteraJogador extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnVoltar);
-        btnVoltar.setBounds(340, 420, 80, 23);
+        btnVoltar.setBounds(340, 420, 80, 31);
 
         lblTime.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lblTime.setForeground(new java.awt.Color(255, 255, 255));
@@ -175,29 +182,36 @@ public class TelaAlteraJogador extends javax.swing.JFrame {
         if (txtNome.getText().equals("") || txtApelido.getText().equals("") || txtDocumento.getText().equals("")) {
             Border bordaVermelha = BorderFactory.createLineBorder(Color.RED);
             JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos");
-            if(txtNome.getText().equals("")){
+            if (txtNome.getText().equals("")) {
                 txtNome.setBorder(bordaVermelha);
             }
-            if(txtApelido.getText().equals("")){
+            if (txtApelido.getText().equals("")) {
                 txtApelido.setBorder(bordaVermelha);
             }
-            if(txtDocumento.getText().equals("")){
+            if (txtDocumento.getText().equals("")) {
                 txtDocumento.setBorder(bordaVermelha);
             }
-            
+
             //verifica se tem coisa em branco e avisa
         } else {
             if (acao.equals("adicionar")) { // se for pra adicionar...
                 jogador.setNome(txtNome.getText());
                 jogador.setApelido(txtApelido.getText());
-                jogador.setDocumento(Integer.valueOf(txtDocumento.getText()));
+                DateFormat sql = new SimpleDateFormat("yyyy-MM-dd");
+                Date data = null;
+                try {
+                    data = sql.parse(txtDocumento.getText());
+                } catch (ParseException ex) {
+                    Logger.getLogger(TelaSumula.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                jogador.setDataNasc((java.sql.Date) data);
                 jogador.setTime(time);
                 JogadorDAO jogadorDAO = new JogadorDAO();
                 jogadorDAO.inserir(jogador); //... ele chama o método de adicionar
-            }else{ // se for pra alterar...
+            } else { // se for pra alterar...
                 jogador.setNome(txtNome.getText());
                 jogador.setApelido(txtApelido.getText());
-                
+
                 JogadorDAO jogadorDAO = new JogadorDAO();
                 jogadorDAO.alterar(jogador); //...chama o método de alterar
             }
