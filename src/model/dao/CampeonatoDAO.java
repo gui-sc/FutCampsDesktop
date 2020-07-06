@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.bean.Campeonato;
 import model.bean.ConnectionFactory;
-import model.bean.Jogador;
-import model.bean.Time;
+
 
 public class CampeonatoDAO {
 
     public int inserir(Campeonato camp) {
-        Connection conn = null;
+        Connection conn;
         int codigoInserido = 0 ;
         try {
-            conn = new ConnectionFactory().getConnection();
+            conn = ConnectionFactory.getConnection();
+            System.out.println(conn);
             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO campeonato (formato, nome, cidade, ano,classificados,"
                     + " premiacao, numTimes, numGrupos, faseDeGrupos,oitavas,quartas,semi,Final,cabecasDeChave,iniciado,finalizado"
                     + "zerarCartoesOitavas,zerarCartoesQuartas,zerarCartoesSemi,cartoesPendurado) "
@@ -49,7 +49,6 @@ public class CampeonatoDAO {
             }
             JOptionPane.showMessageDialog(null, "Campeonato cadastrado com sucesso");
         } catch (SQLException ex) {
-            
             ex.printStackTrace();
         }
         return codigoInserido;
