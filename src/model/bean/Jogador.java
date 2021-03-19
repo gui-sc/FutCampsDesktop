@@ -1,8 +1,10 @@
 package model.bean;
 
+import java.sql.Date;
+
 public class Jogador {
 
-    private int documento;
+    private int id;
     private String nome;
     private Time time;
     private String apelido;
@@ -10,30 +12,49 @@ public class Jogador {
     private int ca;
     private int cv;
     private boolean suspenso;
+    private Date dataNasc;
+    private boolean pendurado;
 
     public Jogador() {
     }
 
-    public Jogador(String nome, int rg, String posicao) {
+    public Jogador(String nome, String posicao) {
         this.nome = nome;
-        this.documento = rg;
         this.apelido = posicao;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Date getDataNasc() {
+        return dataNasc;
+    }
+
+    public void setDataNasc(Date dataNasc) {
+        this.dataNasc = dataNasc;
+    }
+
+    public boolean isPendurado() {
+        return pendurado;
+    }
+
+    public void setPendurado(boolean pendurado) {
+        this.pendurado = pendurado;
+    }
+
+    
+    
     public boolean isSuspenso() {
         return suspenso;
     }
 
     public void setSuspenso(boolean suspenso) {
         this.suspenso = suspenso;
-    }
-
-    public int getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(int documento) {
-        this.documento = documento;
     }
 
     public String getNome() {

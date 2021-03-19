@@ -26,11 +26,11 @@ public class CAmareloDAO {
         Connection conn;
         try {
             conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO c_amarelo(jogador,partida,time)"
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO amarelo(jogador,time,partida)"
                     + " VALUES (?,?,?)");
-            pstmt.setInt(1, jogador.getDocumento());
-            pstmt.setInt(2, partida.getId());
-            pstmt.setInt(3, jogador.getTime().getId());
+            pstmt.setInt(1, jogador.getId());
+            pstmt.setInt(2, jogador.getTime().getId()); 
+            pstmt.setInt(3, partida.getId());
             pstmt.execute();
         } catch (SQLException ex) {
 
@@ -44,7 +44,7 @@ public class CAmareloDAO {
         TimeDAO timeDAO = new TimeDAO();
         try {
             conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("SELECT distinct * FROM c_amarelo"
+            PreparedStatement pstmt = conn.prepareStatement("SELECT distinct * FROM amarelo"
                     + " WHERE partida=?");
             pstmt.setInt(1, partida.getId());
             ResultSet rs = pstmt.executeQuery();

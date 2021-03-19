@@ -13,8 +13,37 @@ public class Time {
     private boolean eliminado;
     private boolean primeiro;
     private boolean cabecaDeChave;
+    private int saldo;
+    private int golsPro;
+    private int golsContra;
     private byte[] escudo;
 
+    public int getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(int saldo) {
+        this.saldo = saldo;
+    }
+
+    public int getGolsPro() {
+        return golsPro;
+    }
+
+    public void setGolsPro(int golsPro) {
+        this.golsPro = golsPro;
+    }
+
+    public int getGolsContra() {
+        return golsContra;
+    }
+
+    public void setGolsContra(int golsContra) {
+        this.golsContra = golsContra;
+    }
+
+    
+    
     public byte[] getEscudo() {
         return escudo;
     }

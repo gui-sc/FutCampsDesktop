@@ -20,8 +20,8 @@ public class TimeDAO {
         try {
             conn = new ConnectionFactory().getConnection();
 
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO times (nome, dirigente, cidade, campeonato, pontos, eliminado,cabecaDeChave,escudo) "
-                    + "VALUES (?,?,?,?, 0,0,?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO times (nome, dirigente, cidade, campeonato, pontos, eliminado,primeiro,cabecaDeChave,escudo) "
+                    + "VALUES (?,?,?,?, 0,0,0,?,?)", Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, time.getNome());
             pstmt.setString(2, time.getDirigente());
             pstmt.setString(3, time.getCidade());

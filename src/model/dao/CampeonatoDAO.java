@@ -10,27 +10,38 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.bean.Campeonato;
 import model.bean.ConnectionFactory;
-import model.bean.Jogador;
-import model.bean.Time;
+
 
 public class CampeonatoDAO {
 
     public int inserir(Campeonato camp) {
-        Connection conn = null;
+        Connection conn;
         int codigoInserido = 0 ;
         try {
-            conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO campeonato (regras, nome, local, ano, premiacao, numTimes, numGrupos, faseDeGrupos,iniciado,cabecasDeChave) "
-                    + "VALUES (?,?,?,?,?,?,?,?,?,default)", Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, camp.getRegras());
+            conn = ConnectionFactory.getConnection();
+            System.out.println(conn);
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO campeonato (formato, nome, cidade, ano,classificados,"
+                    + " premiacao, numTimes, numGrupos, faseDeGrupos,oitavas,quartas,semi,Final,cabecasDeChave,iniciado,finalizado"
+                    + "zerarCartoesOitavas,zerarCartoesQuartas,zerarCartoesSemi,cartoesPendurado) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, camp.getFormato());
             pstmt.setString(2, camp.getNome());
-            pstmt.setString(3, camp.getLocal());
+            pstmt.setString(3, camp.getCidade());
             pstmt.setInt(4, (camp.getAno()));
-            pstmt.setString(5, camp.getPremiacao());
-            pstmt.setInt(6, camp.getNumTimes());
-            pstmt.setInt(7, camp.getNumGrupos());
-            pstmt.setBoolean(8, camp.isFaseDeGrupos());
-            pstmt.setBoolean(9, camp.isIniciado());
+            pstmt.setInt(5, camp.getClassificados());
+            pstmt.setString(6, camp.getPremiacao());
+            pstmt.setInt(7, camp.getNumTimes());
+            pstmt.setInt(8, camp.getNumGrupos());
+            pstmt.setBoolean(9, camp.isFaseDeGrupos());
+            pstmt.setBoolean(10,camp.isOitavas());
+            pstmt.setBoolean(11,camp.isQuartas());
+            pstmt.setBoolean(12,camp.isSemi());
+            pstmt.setBoolean(13,camp.isFinal());
+            pstmt.setBoolean(14, camp.isIniciado());
+            pstmt.setBoolean(15,camp.isZerarCartoesOitavas());
+            pstmt.setBoolean(16,camp.isZerarCartoesQuartas());
+            pstmt.setBoolean(17,camp.isZerarCartoesSemi());
+            pstmt.setInt(18,camp.getCartoesPendurado());
             pstmt.execute();
             ResultSet rs = pstmt.getGeneratedKeys();
             if(rs.next()){
@@ -38,7 +49,6 @@ public class CampeonatoDAO {
             }
             JOptionPane.showMessageDialog(null, "Campeonato cadastrado com sucesso");
         } catch (SQLException ex) {
-            
             ex.printStackTrace();
         }
         return codigoInserido;
@@ -66,6 +76,7 @@ public class CampeonatoDAO {
         try{
             conn = new ConnectionFactory().getConnection();
             PreparedStatement pstmt = conn.prepareStatement("UPDATE campeonato SET"
+                    + " Final = 0"
                     + " finalizado = 1"
                     + " WHERE id=?");
             pstmt.setInt(1, camp.getId());
@@ -80,10 +91,10 @@ public class CampeonatoDAO {
         try {
             conn = new ConnectionFactory().getConnection();
             PreparedStatement pstmt = conn.prepareStatement("UPDATE campeonato SET "
-                    + "nome=?, local=?,premiacao=? "
+                    + "nome=?, cidade=?,premiacao=? "
                     + "WHERE id=?");
             pstmt.setString(1, camp.getNome());
-            pstmt.setString(2, camp.getLocal());
+            pstmt.setString(2, camp.getCidade());
             pstmt.setString(3, camp.getPremiacao());
             pstmt.setInt(4, camp.getId());
             pstmt.executeUpdate();
@@ -93,49 +104,6 @@ public class CampeonatoDAO {
         }
     }
     
-    public void campeao(Campeonato camp, Time time){ // cadastra o campeão no BD
-        Connection conn = null;
-        try{
-            conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("UPDATE campeonato SET "
-                    + "campeao = ? "
-                    + "WHERE id = ?");
-            pstmt.setInt(1, time.getId());
-            pstmt.setInt(2,camp.getId());
-            pstmt.executeUpdate();
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }
-    }
-    
-    public void viceCampeao(Campeonato camp, Time time){ //cadastra o vice no BD
-        Connection conn = null;
-        try{
-            conn = new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("UPDATE campeonato SET "
-                    + "viceCampeao = ? "
-                    + "WHERE id = ?");
-            pstmt.setInt(1, time.getId());
-            pstmt.setInt(2,camp.getId());
-            pstmt.executeUpdate();
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }
-    }
-    public void artilheiro(Campeonato camp, Jogador jogador){
-        Connection conn;
-        try{
-            conn=new ConnectionFactory().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("UPDATE campeonato SET"
-                    + " artilheiro = ?"
-                    + " WHERE id=?");
-            pstmt.setInt(1, jogador.getDocumento());
-            pstmt.setInt(2, camp.getId());
-            pstmt.execute();
-        }catch(SQLException ex){
-            
-        }
-    }
     public Campeonato buscar(int id) {
         Connection conn = null;
         try {
@@ -147,23 +115,25 @@ public class CampeonatoDAO {
             if (rs.next()) {
                 Campeonato selCamp = new Campeonato();
                 selCamp.setNome(rs.getString("nome"));
-                selCamp.setRegras(rs.getString("regras"));
+                selCamp.setFormato(rs.getString("formato"));
                 selCamp.setId(rs.getInt("id"));
                 selCamp.setAno(rs.getInt("ano"));
-                selCamp.setLocal(rs.getString("local"));
+                selCamp.setCidade(rs.getString("cidade"));
                 selCamp.setNumGrupos(rs.getInt("numGrupos"));
                 selCamp.setNumTimes(rs.getInt("numTimes"));
                 selCamp.setPremiacao(rs.getString("premiacao"));
                 selCamp.setFaseDeGrupos(rs.getBoolean("faseDeGrupos"));
-                TimeDAO timeDAO = new TimeDAO();
-                selCamp.setCampeao(timeDAO.buscar(rs.getInt("campeao")));
-                selCamp.setViceCampeao(timeDAO.buscar(rs.getInt("viceCampeao")));
                 selCamp.setOitavas(rs.getBoolean("oitavas"));
                 selCamp.setQuartas(rs.getBoolean("quartas"));
                 selCamp.setSemi(rs.getBoolean("semi"));
                 selCamp.setFinal(rs.getBoolean("Final"));
                 selCamp.setFinalizado(rs.getBoolean("finalizado"));
                 selCamp.setIniciado(rs.getBoolean("iniciado"));
+                selCamp.setCartoesPendurado(rs.getInt("cartoesPendurado"));
+                selCamp.setClassificados(rs.getInt("classificados"));
+                selCamp.setZerarCartoesOitavas(rs.getBoolean("zerarCartoesOitavas"));
+                selCamp.setZerarCartoesQuartas(rs.getBoolean("zerarCartoesQuartas"));
+                selCamp.setZerarCartoesSemi(rs.getBoolean("zerarCartoesSemi"));
                 return selCamp;
             }
         } catch (SQLException ex) {
@@ -180,29 +150,28 @@ public class CampeonatoDAO {
             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM campeonato");
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
-                Campeonato camp = new Campeonato();
-                camp.setId(rs.getInt("id"));
-                camp.setRegras(rs.getString("regras"));
-                camp.setNome(rs.getString("nome"));
-                camp.setLocal(rs.getString("local"));
-                camp.setAno(rs.getInt("ano"));
-                camp.setPremiacao(rs.getString("premiacao"));
-                camp.setNumTimes(rs.getInt("numTimes"));
-                camp.setNumGrupos(rs.getInt("numGrupos"));
-                camp.setFaseDeGrupos(rs.getBoolean("faseDeGrupos"));
-                TimeDAO timeDAO = new TimeDAO();
-                camp.setCampeao(timeDAO.buscar(rs.getInt("campeao")));
-                camp.setViceCampeao(timeDAO.buscar(rs.getInt("viceCampeao")));
-                camp.setCabecasDeChave(rs.getInt("cabecasDeChave"));
-                camp.setIniciado(rs.getBoolean("iniciado"));
-                JogadorDAO jogadorDAO = new JogadorDAO();
-                camp.setArtilheiro(jogadorDAO.buscar(rs.getInt("artilheiro")));
-                camp.setFinalizado(rs.getBoolean("finalizado"));
-                camp.setOitavas(rs.getBoolean("oitavas"));
-                camp.setQuartas(rs.getBoolean("quartas"));
-                camp.setSemi(rs.getBoolean("semi"));
-                camp.setFinal(rs.getBoolean("Final"));
-                campeonatos.add(camp);
+               Campeonato selCamp = new Campeonato();
+                selCamp.setNome(rs.getString("nome"));
+                selCamp.setFormato(rs.getString("formato"));
+                selCamp.setId(rs.getInt("id"));
+                selCamp.setAno(rs.getInt("ano"));
+                selCamp.setCidade(rs.getString("cidade"));
+                selCamp.setNumGrupos(rs.getInt("numGrupos"));
+                selCamp.setNumTimes(rs.getInt("numTimes"));
+                selCamp.setPremiacao(rs.getString("premiacao"));
+                selCamp.setFaseDeGrupos(rs.getBoolean("faseDeGrupos"));
+                selCamp.setOitavas(rs.getBoolean("oitavas"));
+                selCamp.setQuartas(rs.getBoolean("quartas"));
+                selCamp.setSemi(rs.getBoolean("semi"));
+                selCamp.setFinal(rs.getBoolean("Final"));
+                selCamp.setFinalizado(rs.getBoolean("finalizado"));
+                selCamp.setIniciado(rs.getBoolean("iniciado"));
+                selCamp.setCartoesPendurado(rs.getInt("cartoesPendurado"));
+                selCamp.setClassificados(rs.getInt("classificados"));
+                selCamp.setZerarCartoesOitavas(rs.getBoolean("zerarCartoesOitavas"));
+                selCamp.setZerarCartoesQuartas(rs.getBoolean("zerarCartoesQuartas"));
+                selCamp.setZerarCartoesSemi(rs.getBoolean("zerarCartoesSemi"));
+                campeonatos.add(selCamp);
             }
         }catch(SQLException ex){
             ex.printStackTrace();
